@@ -88,18 +88,21 @@ for(i in 1:length(radii)){
 nb_comp_ABAM <- ggplot(data = nb_rad_comp, aes(x = radius, y = ABAM_mse)) +
   geom_line(col = "green") +
   labs(x = "Neighborhood radius (m)", y = "Mean square error") +
-  ggtitle("ABAM") +
-  theme_classic()
+  ggtitle("Abies amabilis") +
+  theme_classic() +
+  theme(plot.title = element_text(face = "italic"))
 nb_comp_PSME <- ggplot(data = nb_rad_comp, aes(x = radius, y = PSME_mse)) +
   geom_line(col = "green") +
   labs(x = "Neighborhood radius (m)", y = "Mean square error") +
-  ggtitle("PSME") +
-  theme_classic()
+  ggtitle("Pseudotsuga menziesii") +
+  theme_classic() +
+  theme(plot.title = element_text(face = "italic"))
 nb_comp_TSHE <- ggplot(data = nb_rad_comp, aes(x = radius, y = TSHE_mse)) +
   geom_line(col = "green") +
   labs(x = "Neighborhood radius (m)", y = "Mean square error") +
-  ggtitle("TSHE") +
-  theme_classic()
+  ggtitle("Tsuga heterophylla") +
+  theme_classic() +
+  theme(plot.title = element_text(face = "italic"))
 
 # Chosen neighborhood sizes: ABAM = 12m, PSME = 10m, TSHE = 12m
 
