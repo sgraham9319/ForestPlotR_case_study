@@ -145,8 +145,7 @@ nbhds <- nbhds %>%
 
 # Fit model
 ABAM_mod <- growth_model(nbhds, outcome_var = "size_corr_growth",
-                         iterations = 10, rare_comps = 100,
-                         density_suffix = "_density")
+                         rare_comps = 100, density_suffix = "_density")
 
 # Format data for plotting
 coef_summ <- ABAM_mod$mod_coef %>%
@@ -161,16 +160,14 @@ coef_summ <- ABAM_mod$mod_coef %>%
          TSME = 0.5 * (sps_compTSME + TSME_density)) %>%
   select(ABAM, ABLA, CANO, PSME, RARE, TABR, THPL, TSHE, TSME)
 plot_data_ABAM <- data.frame(
-  competitor = c("ABAM", "ABLA", "CANO", "PSME", "RARE", "TABR", "THPL",
-                  "TSHE", "TSME"),
-  means = apply(coef_summ, MARGIN = 2, FUN = mean),
-  sds = apply(coef_summ, MARGIN = 2, FUN = sd)
+  competitor = names(coef_summ),
+  growth_response = t(coef_summ)[,1]
 )
 
 # Create plot
-sps_int_ABAM <- ggplot(plot_data_ABAM, aes(x = competitor, y = means)) +
+sps_int_ABAM <- ggplot(plot_data_ABAM, aes(x = competitor,
+                                           y = growth_response)) +
   geom_point(size = 3) +
-  geom_errorbar(aes(ymin = means - sds, ymax = means + sds), width = 0) +
   geom_hline(yintercept = 0, linetype = "dashed") +
   xlab("Neighbor species") +
   ylab("Growth response") +
@@ -215,8 +212,7 @@ nbhds <- nbhds %>%
 
 # Fit model
 PSME_mod <- growth_model(nbhds, outcome_var = "size_corr_growth",
-                         iterations = 10, rare_comps = 100,
-                         density_suffix = "_density")
+                         rare_comps = 100, density_suffix = "_density")
 
 # Format data for plotting
 coef_summ <- PSME_mod$mod_coef %>%
@@ -230,16 +226,14 @@ coef_summ <- PSME_mod$mod_coef %>%
          TSHE = 0.5 * (sps_compTSHE + TSHE_density)) %>%
   select(ABAM, ABLA, PICO, PIMO, PSME, RARE, THPL, TSHE)
 plot_data_PSME <- data.frame(
-  competitor = c("ABAM", "ABLA", "PICO", "PIMO", "PSME", "RARE", "THPL",
-                  "TSHE"),
-  means = apply(coef_summ, MARGIN = 2, FUN = mean),
-  sds = apply(coef_summ, MARGIN = 2, FUN = sd)
+  competitor = names(coef_summ),
+  growth_response = t(coef_summ)[,1]
 )
 
 # Create plot
-sps_int_PSME <- ggplot(plot_data_PSME, aes(x = competitor, y = means)) +
+sps_int_PSME <- ggplot(plot_data_PSME, aes(x = competitor,
+                                           y = growth_response)) +
   geom_point(size = 3) +
-  geom_errorbar(aes(ymin = means - sds, ymax = means + sds), width = 0) +
   geom_hline(yintercept = 0, linetype = "dashed") +
   xlab("Neighbor species") +
   ylab("Growth response") +
@@ -284,8 +278,7 @@ nbhds <- nbhds %>%
 
 # Fit model
 TSHE_mod <- growth_model(nbhds, outcome_var = "size_corr_growth",
-                         iterations = 10, rare_comps = 100,
-                         density_suffix = "_density")
+                         rare_comps = 100, density_suffix = "_density")
 
 # Format data for plotting
 coef_summ <- TSHE_mod$mod_coef %>%
@@ -302,16 +295,14 @@ coef_summ <- TSHE_mod$mod_coef %>%
          TSME = 0.5 * (sps_compTSME + TSME_density)) %>%
   select(ABAM, ABLA, CANO, PICO, PIMO, PSME, RARE, TABR, THPL, TSHE, TSME)
 plot_data_TSHE <- data.frame(
-  competitor = c("ABAM", "ABLA", "CANO", "PICO", "PIMO", "PSME", "RARE",
-                  "TABR", "THPL", "TSHE", "TSME"),
-  means = apply(coef_summ, MARGIN = 2, FUN = mean),
-  sds = apply(coef_summ, MARGIN = 2, FUN = sd)
+  competitor = names(coef_summ),
+  growth_response = t(coef_summ)[,1]
 )
 
 # Create plot
-sps_int_TSHE <- ggplot(plot_data_TSHE, aes(x = competitor, y = means)) +
+sps_int_TSHE <- ggplot(plot_data_TSHE, aes(x = competitor,
+                                           y = growth_response)) +
   geom_point(size = 3) +
-  geom_errorbar(aes(ymin = means - sds, ymax = means + sds), width = 0) +
   geom_hline(yintercept = 0, linetype = "dashed") +
   xlab("Neighbor species") +
   ylab("Growth response") +
