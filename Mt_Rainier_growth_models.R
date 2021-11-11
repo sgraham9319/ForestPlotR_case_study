@@ -24,7 +24,7 @@ nb_rad_comp <- data.frame(
   TSHE_rsq = rep(NA, times = length(radii))
 )
 
-# Loop through radii, calculating mse for each
+# Loop through radii, calculating mse for each (this may take 2 minutes to run)
 for(i in 1:length(radii)){
   
   # Extract neighborhood radius
@@ -169,11 +169,14 @@ plot_data_ABAM <- data.frame(
 
 # Create plot
 sps_int_ABAM <- ggplot(plot_data_ABAM, aes(x = competitor, y = means)) +
-  geom_point() +
+  geom_point(size = 3) +
   geom_errorbar(aes(ymin = means - sds, ymax = means + sds), width = 0) +
   geom_hline(yintercept = 0, linetype = "dashed") +
   xlab("Neighbor species") +
   ylab("Growth response") +
+  annotate("rect", xmin = 0.5, xmax = 1.5, ymin = -0.002, ymax = 0.004,
+           alpha = 0.3) +
+  scale_y_continuous(expand = c(0, 0)) +
   theme_classic() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
@@ -235,11 +238,14 @@ plot_data_PSME <- data.frame(
 
 # Create plot
 sps_int_PSME <- ggplot(plot_data_PSME, aes(x = competitor, y = means)) +
-  geom_point() +
+  geom_point(size = 3) +
   geom_errorbar(aes(ymin = means - sds, ymax = means + sds), width = 0) +
   geom_hline(yintercept = 0, linetype = "dashed") +
   xlab("Neighbor species") +
   ylab("Growth response") +
+  annotate("rect", xmin = 4.5, xmax = 5.5, ymin = -0.0015, ymax = 0.0045,
+           alpha = 0.3) +
+  scale_y_continuous(expand = c(0, 0)) +
   theme_classic() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
@@ -304,11 +310,14 @@ plot_data_TSHE <- data.frame(
 
 # Create plot
 sps_int_TSHE <- ggplot(plot_data_TSHE, aes(x = competitor, y = means)) +
-  geom_point() +
+  geom_point(size = 3) +
   geom_errorbar(aes(ymin = means - sds, ymax = means + sds), width = 0) +
   geom_hline(yintercept = 0, linetype = "dashed") +
   xlab("Neighbor species") +
   ylab("Growth response") +
+  annotate("rect", xmin = 9.5, xmax = 10.5, ymin = -0.0027, ymax = 0.01,
+           alpha = 0.3) +
+  scale_y_continuous(expand = c(0, 0)) +
   theme_classic() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
