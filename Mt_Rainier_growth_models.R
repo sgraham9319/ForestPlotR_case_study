@@ -164,10 +164,13 @@ plot_data_ABAM <- data.frame(
   growth_response = t(coef_summ)[,1]
 )
 
+# Identify competitor species with coefficient of zero
+pt_cols <- if_else(plot_data_ABAM$growth_response == 0, "red", "black")
+
 # Create plot
 sps_int_ABAM <- ggplot(plot_data_ABAM, aes(x = competitor,
                                            y = growth_response)) +
-  geom_point(size = 3) +
+  geom_point(size = 3, color = pt_cols) +
   geom_hline(yintercept = 0, linetype = "dashed") +
   xlab("Neighbor species") +
   ylab("Growth response") +
@@ -230,10 +233,13 @@ plot_data_PSME <- data.frame(
   growth_response = t(coef_summ)[,1]
 )
 
+# Identify competitor species with coefficient of zero
+pt_cols <- if_else(plot_data_PSME$growth_response == 0, "red", "black")
+
 # Create plot
 sps_int_PSME <- ggplot(plot_data_PSME, aes(x = competitor,
                                            y = growth_response)) +
-  geom_point(size = 3) +
+  geom_point(size = 3, color = pt_cols) +
   geom_hline(yintercept = 0, linetype = "dashed") +
   xlab("Neighbor species") +
   ylab("Growth response") +
@@ -299,10 +305,13 @@ plot_data_TSHE <- data.frame(
   growth_response = t(coef_summ)[,1]
 )
 
+# Identify competitor species with coefficient of zero
+pt_cols <- if_else(plot_data_TSHE$growth_response == 0, "red", "black")
+
 # Create plot
 sps_int_TSHE <- ggplot(plot_data_TSHE, aes(x = competitor,
                                            y = growth_response)) +
-  geom_point(size = 3) +
+  geom_point(size = 3, color = pt_cols) +
   geom_hline(yintercept = 0, linetype = "dashed") +
   xlab("Neighbor species") +
   ylab("Growth response") +
