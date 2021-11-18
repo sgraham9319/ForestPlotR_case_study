@@ -1,4 +1,4 @@
-library(ForestPlot)
+library(ForestPlotR)
 library(dplyr)
 library(ggplot2)
 library(ggpubr)
