@@ -7,102 +7,18 @@ library(ggpubr)
 # Part 1. Selecting neighborhood size
 #====================================
 
-# Define focal species
-focal_sps <- c("ABAM", "PSME", "TSHE")
+# Fit models with different neighborhood sizes
+nbhd_size_comp <- select_nbhd_size(radii = seq(2, 20, 2), map_data = mapping,
+                                   growth_data = tree,
+                                   abiotic_data = stand_abiotic,
+                                   focal_sps = c("ABAM", "PSME", "TSHE"),
+                                   dens_type = "proportional",
+                                   max_x = 100, max_y = 100)
 
-# Create vector of neighborhood radii
-radii <- seq(2, 20, 2)
-
-# Create data frame to store mse values
-nb_rad_comp <- data.frame(
-  radius = radii,
-  ABAM_mse = rep(NA, times = length(radii)),
-  ABAM_rsq = rep(NA, times = length(radii)),
-  PSME_mse = rep(NA, times = length(radii)),
-  PSME_rsq = rep(NA, times = length(radii)),
-  TSHE_mse = rep(NA, times = length(radii)),
-  TSHE_rsq = rep(NA, times = length(radii))
-)
-
-# Loop through radii, calculating mse for each (this may take 2 minutes to run)
-for(i in 1:length(radii)){
-  
-  # Extract neighborhood radius
-  nb_rad <- radii[i]
-  
-  # Construct neighborhoods
-  nbhds <- neighborhoods(mapping, radius = nb_rad)
-  
-  # Describe neighborhoods
-  nbhd_summ <- neighborhood_summary(nbhds, id_column = "tree_id",
-                                    radius = nb_rad, densities = "proportional")
-  
-  # Combine neighborhoods with their summaries
-  nbhds <- nbhds %>%
-    left_join(nbhd_summ, by = "tree_id")
-  
-  # Remove trees whose max neighborhood overlaps a plot boundary
-  nbhds <- nbhds %>%
-    filter(x_coord >= max(radii) & x_coord <= 100 - max(radii) &
-             y_coord >= max(radii) & y_coord <= 100 - max(radii))
-  
-  # Calculate annual growth for all trees
-  growth <- growth_summary(tree)
-  
-  # Remove trees that were only measured once and/or had negative growth
-  growth <- growth %>%
-    filter(first_record != last_record &
-             annual_growth >= 0)
-  
-  # Add growth data to neighborhoods
-  nbhds <- nbhds %>%
-    inner_join(growth %>% select(tree_id, size_corr_growth),
-               by = "tree_id")
-  
-  # Add plot abiotic data
-  nbhds <- nbhds %>%
-    left_join(stand_abiotic, by = "stand_id")
-  
-  # Loop through focal species
-  for(sps in focal_sps){
-   
-    # Subset nbhds to focal species
-    one_sps <- nbhds %>%
-      filter(species == sps)
-    
-    # Drop columns not needed for the model
-    one_sps <- one_sps %>%
-      select(-c(stand_id, species, dbh, abh, x_coord, y_coord, id_comp, abh_comp))
-    
-    # Run model
-    mod <- growth_model(one_sps, outcome_var = "size_corr_growth",
-                        rare_comps = 100, density_suffix = "_density")
-    
-    # Store mean square error and R^2
-    nb_rad_comp[i, paste0(sps, "_mse")] <- mod$mod_coef$mse[1]
-    nb_rad_comp[i, paste0(sps, "_rsq")] <- mod$R_squared 
-  }
-}
-
-# Plot relationship between neighborhood radius and model mse for each species
-nb_comp_ABAM <- ggplot(data = nb_rad_comp, aes(x = radius, y = ABAM_mse)) +
-  geom_line(col = "green") +
-  labs(x = "Neighborhood radius (m)", y = "Mean square error") +
-  ggtitle("Abies amabilis") +
-  theme_classic() +
-  theme(plot.title = element_text(face = "italic"))
-nb_comp_PSME <- ggplot(data = nb_rad_comp, aes(x = radius, y = PSME_mse)) +
-  geom_line(col = "green") +
-  labs(x = "Neighborhood radius (m)", y = "Mean square error") +
-  ggtitle("Pseudotsuga menziesii") +
-  theme_classic() +
-  theme(plot.title = element_text(face = "italic"))
-nb_comp_TSHE <- ggplot(data = nb_rad_comp, aes(x = radius, y = TSHE_mse)) +
-  geom_line(col = "green") +
-  labs(x = "Neighborhood radius (m)", y = "Mean square error") +
-  ggtitle("Tsuga heterophylla") +
-  theme_classic() +
-  theme(plot.title = element_text(face = "italic"))
+# View results
+nbhd_size_comp$ABAM_plot
+nbhd_size_comp$PSME_plot
+nbhd_size_comp$TSHE_plot
 
 # Chosen neighborhood sizes: ABAM = 12m, PSME = 10m, TSHE = 12m
 
@@ -129,6 +45,13 @@ nbhds <- nbhds %>%
 nbhds <- nbhds %>%
   filter(x_coord >= 12 & x_coord <= 100 - 12 &
            y_coord >= 12 & y_coord <= 100 - 12)
+
+# Calculate annual growth for all trees
+growth <- growth_summary(tree)
+
+# Remove trees that were only measured once and/or had negative growth
+growth <- growth %>%
+  filter(first_record != last_record & annual_growth >= 0)
 
 # Add growth data to neighborhoods
 nbhds <- nbhds %>%
@@ -324,6 +247,17 @@ sps_int_TSHE <- ggplot(plot_data_TSHE, aes(x = competitor,
 #==================================
 # Part 3. Creating multi-panel plot
 #==================================
+
+# Clean the neighborhood size comparison figures
+nb_comp_ABAM <- nbhd_size_comp$ABAM_plot +
+  ggtitle("Abies amabilis") +
+  theme(plot.title = element_text(face = "italic"))
+nb_comp_PSME <- nbhd_size_comp$PSME_plot +
+  ggtitle("Pseudotsuga menziesii") +
+  theme(plot.title = element_text(face = "italic"))
+nb_comp_TSHE <- nbhd_size_comp$TSHE_plot +
+  ggtitle("Tsuga heterophylla") +
+  theme(plot.title = element_text(face = "italic"))
 
 # Initiate plot saving
 jpeg(filename = "Figure2.jpg",
