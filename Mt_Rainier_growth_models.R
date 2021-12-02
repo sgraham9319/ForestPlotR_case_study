@@ -250,12 +250,15 @@ sps_int_TSHE <- ggplot(plot_data_TSHE, aes(x = competitor,
 
 # Clean the neighborhood size comparison figures
 nb_comp_ABAM <- nbhd_size_comp$ABAM_plot +
+  geom_vline(xintercept = 12, linetype='dashed') +
   ggtitle("Abies amabilis") +
   theme(plot.title = element_text(face = "italic"))
 nb_comp_PSME <- nbhd_size_comp$PSME_plot +
+  geom_vline(xintercept = 10, linetype='dashed') +
   ggtitle("Pseudotsuga menziesii") +
   theme(plot.title = element_text(face = "italic"))
 nb_comp_TSHE <- nbhd_size_comp$TSHE_plot +
+  geom_vline(xintercept = 12, linetype='dashed') +
   ggtitle("Tsuga heterophylla") +
   theme(plot.title = element_text(face = "italic"))
 
