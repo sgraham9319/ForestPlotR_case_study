@@ -9,7 +9,7 @@ library(ggpubr)
 
 # Fit models with different neighborhood sizes
 nbhd_size_comp <- select_nbhd_size(radii = seq(2, 20, 2), map_data = mapping,
-                                   growth_data = tree,
+                                   model_process = "growth", tree_data = tree,
                                    abiotic_data = stand_abiotic,
                                    focal_sps = c("ABAM", "PSME", "TSHE"),
                                    dens_type = "proportional",
@@ -36,6 +36,10 @@ nbhds <- neighborhoods(mapping, radius = 12)
 # Describe neighborhoods
 nbhd_summ <- neighborhood_summary(nbhds, id_column = "tree_id",
                                   radius = 12, densities = "proportional")
+
+# Remove evenness variable because it will be NA when species richness = 1
+nbhd_summ <- nbhd_summ %>%
+  select(-evenness)
 
 # Combine neighborhoods with their summaries
 nbhds <- nbhds %>%
@@ -67,8 +71,8 @@ nbhds <- nbhds %>%
   select(-c(stand_id, species, dbh, abh, x_coord, y_coord, id_comp, abh_comp))
 
 # Fit model
-ABAM_mod <- growth_model(nbhds, outcome_var = "size_corr_growth",
-                         rare_comps = 100, density_suffix = "_density")
+ABAM_mod <- growth_mort_model(nbhds, outcome_var = "size_corr_growth",
+                              rare_comps = 100, density_suffix = "_density")
 
 # Format data for plotting
 coef_summ <- ABAM_mod$mod_coef %>%
@@ -114,6 +118,10 @@ nbhds <- neighborhoods(mapping, radius = 10)
 nbhd_summ <- neighborhood_summary(nbhds, id_column = "tree_id",
                                   radius = 10, densities = "proportional")
 
+# Remove evenness variable because it will be NA when species richness = 1
+nbhd_summ <- nbhd_summ %>%
+  select(-evenness)
+
 # Combine neighborhoods with their summaries
 nbhds <- nbhds %>%
   left_join(nbhd_summ, by = "tree_id")
@@ -137,8 +145,8 @@ nbhds <- nbhds %>%
   select(-c(stand_id, species, dbh, abh, x_coord, y_coord, id_comp, abh_comp))
 
 # Fit model
-PSME_mod <- growth_model(nbhds, outcome_var = "size_corr_growth",
-                         rare_comps = 100, density_suffix = "_density")
+PSME_mod <- growth_mort_model(nbhds, outcome_var = "size_corr_growth",
+                              rare_comps = 100, density_suffix = "_density")
 
 # Format data for plotting
 coef_summ <- PSME_mod$mod_coef %>%
@@ -183,6 +191,10 @@ nbhds <- neighborhoods(mapping, radius = 12)
 nbhd_summ <- neighborhood_summary(nbhds, id_column = "tree_id",
                                   radius = 12, densities = "proportional")
 
+# Remove evenness variable because it will be NA when species richness = 1
+nbhd_summ <- nbhd_summ %>%
+  select(-evenness)
+
 # Combine neighborhoods with their summaries
 nbhds <- nbhds %>%
   left_join(nbhd_summ, by = "tree_id")
@@ -206,8 +218,8 @@ nbhds <- nbhds %>%
   select(-c(stand_id, species, dbh, abh, x_coord, y_coord, id_comp, abh_comp))
 
 # Fit model
-TSHE_mod <- growth_model(nbhds, outcome_var = "size_corr_growth",
-                         rare_comps = 100, density_suffix = "_density")
+TSHE_mod <- growth_mort_model(nbhds, outcome_var = "size_corr_growth",
+                              rare_comps = 100, density_suffix = "_density")
 
 # Format data for plotting
 coef_summ <- TSHE_mod$mod_coef %>%
@@ -240,7 +252,7 @@ sps_int_TSHE <- ggplot(plot_data_TSHE, aes(x = competitor,
   ylab("Growth response") +
   annotate("rect", xmin = 9.5, xmax = 10.5, ymin = -0.0027, ymax = 0.01,
            alpha = 0.3) +
-  scale_y_continuous(expand = c(0, 0)) +
+  scale_y_continuous(expand = c(0, 0), limits = c(-0.0025, 0.0105)) +
   theme_classic() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
