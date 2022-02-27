@@ -71,8 +71,8 @@ nbhds <- nbhds %>%
   select(-c(stand_id, species, dbh, abh, x_coord, y_coord, id_comp, abh_comp))
 
 # Fit model
-ABAM_mod <- growth_mort_model(nbhds, outcome_var = "size_corr_growth",
-                              rare_comps = 100, density_suffix = "_density")
+ABAM_mod <- growth_model(nbhds, outcome_var = "size_corr_growth",
+                         rare_comps = 100, density_suffix = "_density")
 
 # Format data for plotting
 coef_summ <- ABAM_mod$mod_coef %>%
@@ -145,8 +145,8 @@ nbhds <- nbhds %>%
   select(-c(stand_id, species, dbh, abh, x_coord, y_coord, id_comp, abh_comp))
 
 # Fit model
-PSME_mod <- growth_mort_model(nbhds, outcome_var = "size_corr_growth",
-                              rare_comps = 100, density_suffix = "_density")
+PSME_mod <- growth_model(nbhds, outcome_var = "size_corr_growth",
+                         rare_comps = 100, density_suffix = "_density")
 
 # Format data for plotting
 coef_summ <- PSME_mod$mod_coef %>%
@@ -218,8 +218,8 @@ nbhds <- nbhds %>%
   select(-c(stand_id, species, dbh, abh, x_coord, y_coord, id_comp, abh_comp))
 
 # Fit model
-TSHE_mod <- growth_mort_model(nbhds, outcome_var = "size_corr_growth",
-                              rare_comps = 100, density_suffix = "_density")
+TSHE_mod <- growth_model(nbhds, outcome_var = "size_corr_growth",
+                         rare_comps = 100, density_suffix = "_density")
 
 # Format data for plotting
 coef_summ <- TSHE_mod$mod_coef %>%
